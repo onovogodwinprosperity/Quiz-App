@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .quiz-container {
+      background: #fff;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      padding: 20px;
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .quiz-container h1 {
+      margin-bottom: 20px;
+    }
+
+    .question {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+
+    .options {
+      list-style: none;
+      padding: 0;
+    }
+
+    .options li {
+      margin: 10px 0;
+
+    }
+
+    .options button {
+        background-color: #ff1a1a;; /* Red color for options */
+      color: white;
+      border: none;
+      padding: 10px 200px;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .options button:hover {
+        background-color: #1e08e7;
+        
+    }
+
+    .next-btn {
+      margin-top: 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .next-btn:hover {
+      background-color: #0056b3;
+    }
+
+    .score {
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>Quiz App</h1>
+    <div class="question"></div>
+    <ul class="options"></ul>
+    <button class="next-btn" disabled>Next Question</button>
+    <div class="score" style="display: none;"></div>
+  </div>
+
+  <script>
+    // Quiz data
+    const quizData = [
+      {
+        question: "What is the capital of the United States?",
+        options: ["Washington, D.C.", "New York", "Los Angeles", "Chicago"],
+        answer: "Washington, D.C.",
+      },
+      {
+        question: "Who developed the theory of relativity?",
+        options: ["Isaac Newton", "Albert Einstein", "Galileo Galilei", "Nikola Tesla"],
+        answer: "Albert Einstein",
+      },
+      {
+        question: "What is the largest planet in our solar system?",
+        options: ["Mars", "Venus", "Jupiter", "Saturn"],
+        answer: "Jupiter",
+      },
+      {
+        question: "Who wrote the play 'Romeo and Juliet'?",
+        options: ["William Shakespeare", "Charles Dickens", "Jane Austen", "Mark Twain"],
+        answer: "William Shakespeare",
+      },
+      {
+        question: "What is the square root of 64?",
+        options: ["6", "7", "8", "9"],
+        answer: "8",
+      },
+      {
+        question: "What is the chemical symbol for gold?",
+        options: ["Au", "Ag", "Fe", "Hg"],
+        answer: "Au",
+      },
+      {
+        question: "Who painted the Mona Lisa?",
+        options: ["Leonardo da Vinci", "Vincent van Gogh", "Pablo Picasso", "Claude Monet"],
+        answer: "Leonardo da Vinci",
+      },
+      {
+        question: "What is the hardest natural substance on Earth?",
+        options: ["Gold", "Diamond", "Steel", "Quartz"],
+        answer: "Diamond",
+      },
+      {
+        question: "What is the longest river in the world?",
+        options: ["Amazon River", "Nile River", "Yangtze River", "Mississippi River"],
+        answer: "Nile River",
+      },
+      {
+        question: "Who discovered penicillin?",
+        options: ["Alexander Fleming", "Marie Curie", "Louis Pasteur", "Thomas Edison"],
+        answer: "Alexander Fleming",
+      },
+      {
+        question: "How many continents are there?",
+        options: ["5", "6", "7", "8"],
+        answer: "7",
+      },
+      {
+        question: "Which gas do plants use for photosynthesis?",
+        options: ["Oxygen", "Carbon Dioxide", "Hydrogen", "Nitrogen"],
+        answer: "Carbon Dioxide",
+      },
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+
+    const questionElement = document.querySelector(".question");
+    const optionsElement = document.querySelector(".options");
+    const nextButton = document.querySelector(".next-btn");
+    const scoreElement = document.querySelector(".score");
+
+    function loadQuestion() {
+      const currentQuestion = quizData[currentQuestionIndex];
+      questionElement.textContent = currentQuestion.question;
+      optionsElement.innerHTML = "";
+
+      currentQuestion.options.forEach((option) => {
+        const button = document.createElement("button");
+        button.textContent = option;
+        button.addEventListener("click", () => handleOptionClick(button, option));
+        const li = document.createElement("li");
+        li.appendChild(button);
+        optionsElement.appendChild(li);
+      });
+
+      nextButton.disabled = true;
+    }
+
+    function handleOptionClick(button, selectedOption) {
+      const currentQuestion = quizData[currentQuestionIndex];
+      if (selectedOption === currentQuestion.answer) {
+        button.style.backgroundColor = "green";
+        score++;
+      } else {
+        button.style.backgroundColor = "red";
+      }
+      Array.from(optionsElement.querySelectorAll("button")).forEach((btn) => {
+        btn.disabled = true;
+        if (btn.textContent === currentQuestion.answer) {
+          btn.style.backgroundColor = "green";
+        }
+      });
+      nextButton.disabled = false;
+    }
+
+    nextButton.addEventListener("click", () => {
+      currentQuestionIndex++;
+      if (currentQuestionIndex < quizData.length) {
+        loadQuestion();
+      } else {
+        showScore();
+      }
+    });
+
+    function showScore() {
+      document.querySelector(".quiz-container").innerHTML = `
+        <h1>Quiz Complete!</h1>
+        <p class="score">Your score: ${score}/${quizData.length}</p>
+      `;
+    }
+
+    loadQuestion();
+  </script>
+</body>
+</html>
