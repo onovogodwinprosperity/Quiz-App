@@ -1,6 +1,6 @@
-# Command-Line Quiz App
+# Quiz App
 
-This is a simple quiz application that runs in your browser's console. It presents multiple-choice questions to the user and calculates their score at the end. The app is built using JavaScript and is styled to simulate a command-line interface.
+This is a simple quiz application that runs in your browser's console. It presents multiple-choice questions to the user and calculates their score at the end. The app is built using HTML, CSS, JavaScript and is styled to si.
 
 ---
 
